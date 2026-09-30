@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pixel Color ไทย</title>
+    
+    <!-- PWA Setup -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <!-- Main Screen -->
+    <div id="screen-main" class="screen active">
+        <div class="app-bar">
+            <div class="app-title">🎨 Pixel Color ไทย</div>
+            <div>
+                <button class="icon-btn" onclick="toggleAudio()">🎵</button>
+                <button class="icon-btn" onclick="showModal('modal-help')">❓</button>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('levels')">ระดับด่าน</button>
+            <button class="tab-btn" onclick="switchTab('freedraw')">ระบายอิสระ</button>
+            <button class="tab-btn" onclick="switchTab('gallery')">คลังผลงาน</button>
+            <button class="tab-btn" onclick="switchTab('stats')">สถิติ</button>
+        </div>
+
+        <!-- Levels View -->
+        <div id="view-levels" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+            <div class="filter-bar">
+                <label style="font-size: 14px; color: var(--text-sub);">เรียงตามความยาก:</label>
+                <select class="select-input" onchange="sortLevels(this.value)">
+                    <option value="easy">ง่ายสุด -> ยากที่สุด</option>
+                    <option value="hard">ยากที่สุด -> ง่ายสุด</option>
+                </select>
+            </div>
+            <div class="grid-container" id="levels-grid"></div>
+        </div>
+
+        <!-- Free Draw View -->
+        <div id="view-freedraw" style="display: none; flex-direction: column; flex: 1; align-items: center; justify-content: center; padding: 20px;">
+            <h3>โหมดระบายสีอิสระ</h3>
+            <p style="color: var(--text-sub); margin: 8px 0 16px 0;">สร้างสรรค์ผลงานของคุณเองบนตารางพิกเซล</p>
+            <button class="btn" onclick="startFreeDraw()">เริ่มวาดรูปอิสระ</button>
+        </div>
+
+        <!-- Gallery View -->
+        <div id="view-gallery" style="display: none; flex: 1;" class="grid-container" id="gallery-grid">
+            <p style="grid-column: 1/-1; text-align: center; color: var(--text-sub);">ยังไม่มีผลงานที่ระบายเสร็จ</p>
+        </div>
+
+        <!-- Stats View -->
+        <div id="view-stats" style="display: none; flex: 1; padding: 16px;">
+            <div class="stats-card">
+                <h4>📊 สถิติการระบายสี</h4>
+                <p style="margin-top: 8px;">ด่านที่ระบายสำเร็จแล้ว: <b id="stat-completed">0</b> / 50</p>
+                <p style="margin-top: 4px;">ด่านยากที่สุดที่ทำสำเร็จ: <b id="stat-hardest">-</b></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="screen-game" class="screen">
+        <div class="app-bar">
+            <button class="icon-btn" onclick="exitGame()">⬅️</button>
+            <div class="app-title" id="game-title">ชื่อด่าน</div>
+            <div id="game-progress" style="font-size: 14px; font-weight: 600;">0%</div>
+        </div>
+
+        <div class="canvas-area" id="canvas-container">
+            <canvas id="game-canvas"></canvas>
+        </div>
+
+        <div class="palette-bar" id="palette-bar"></div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="modal-help" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 12px;">📖 วิธีการเล่น</h3>
+            <p style="margin-bottom: 8px;">1. เลือกระดับด่านที่ต้องการระบายสี</p>
+            <p style="margin-bottom: 8px;">2. เลือกสีจากแถบด้านล่าง ซึ่งจะมีตัวเลขบอกกำกับ</p>
+            <p style="margin-bottom: 8px;">3. กดหรือลากระบายสีลงบนช่องที่มีตัวเลขตรงกัน</p>
+            <p style="margin-bottom: 16px;">4. ใช้นิ้วซูมเข้า-ออก หรือลากเพื่อขยับกระดานได้อย่างอิสระ</p>
+            <button class="btn" style="width: 100%;" onclick="hideModal('modal-help')">เข้าใจแล้ว</button>
+        </div>
+    </div>
+
+    <script src="./js/game.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
